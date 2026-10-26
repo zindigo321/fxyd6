@@ -1,0 +1,32 @@
+{
+  "kind": "COMPOSITE_OFFLINE_ACCEPTANCE",
+  "baseline_commit": "6c73dc3293fdeeb02b632c7c7ea876fbb7b1cb82",
+  "source_dir": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round7\\20261024T151318_f08f71ff",
+  "historical_validator_dir": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round7\\20261024T154457_validation_correction_381d29",
+  "independent_audit_dir": "G:\\gpt-file\\Codex\\2026-10-24\\https-github-com-zindigo321-bd-fmb-2\\outputs\\round7_audit",
+  "baseline_evidence_dir": "G:\\fmb666\\work\\round8\\preflight3",
+  "execution_start_dir": "G:\\fmb666\\work\\round8\\execution_start_20261026T115333",
+  "prior_round8_review": "G:\\fmb666\\work\\round8\\20261026T115926_offline_8952783ce9\\post_delivery_review.json",
+  "output_root": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round8",
+  "subject_run_id": "20261024T071319_1b5b10c3c4",
+  "subject_config_sha256": "cc8251d4740c9b25f4dba758d169c2a672e609cbb5344de7a03d0d86349f208d",
+  "subject_code_sha256": "21de215a90f50e3b46fbc14ce42a637b1459a5a9a83059fbdad2dc8c65c18785",
+  "historical_validator_run_id": "20261024T074458_eecccadff1",
+  "historical_validator_code_sha256": "82ba5dc5872736bdf300d2fd6af830532baf47ad5867a86ca9ffb0ebb0e743bb",
+  "native_activation_budget": 0,
+  "official_readiness": "UNRESOLVED",
+  "official_metrics_applicable": false,
+  "official_score": null,
+  "required_checks": [
+    "source_identity", "historical_manifests", "dependency_binding", "static_review", "hash_erratum",
+    "science_identity", "candidate_queries", "trajectories", "camera_constraints",
+    "independent_arithmetic", "geometry_reopen", "csv_json", "historical_native_evidence",
+    "baseline_regression", "complete_regression", "counterexamples", "native_guard",
+    "source_raw_preservation", "validator_code_preservation"
+  ],
+  "exit_policy": "Exit 0 only if every required check and final delivery verification passes. Data mismatch is FAIL; missing proof or inaccessible critical evidence is BLOCKED. Neither changes historical exit codes.",
+  "reuse_policy": "Reuse S native evidence only after S/V ZIP identities, complete native dependency closure, saved stage/instance/cleanup evidence and new independent offline calculations pass. No full-repository hash equality requirement; no unproved executable change allowed.",
+  "classification_policy": "Every declared reference is critical except exact historical tests/cases/test_* descendants, preclassified before reads. Unreadable noncritical fixtures are UNVERIFIED and full historical coverage is PARTIAL.",
+  "preservation_policy": "All readable source evidence and frozen K code must retain exact raw bytes. Normalized UTF-8/CRLF-to-LF digests only explain history and never replace preservation.",
+  "manifest_policy": "Freeze reports and close subprocess logs first. artifact_manifest lists all output files except itself and delivery_verification. delivery_verification hashes artifact_manifest and verifies each member; no recursive self-hash. Work-only mutation fixtures are separately recorded by identity/path/bytes/reason."
+}

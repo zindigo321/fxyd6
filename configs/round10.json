@@ -1,0 +1,16 @@
+{
+  "kind": "ROUND10_OFFLINE_CONSERVATIVE_CANDIDATE_PROTOTYPE",
+  "k9_dir": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round9\\20261026T130516_offline_bf2c07d5cd",
+  "k9_code_sha256": "f8cdb7c0fa85ffd7ee728895205995304567122f4340a5bd0bee259847df3f88",
+  "audit_dir": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\reviews\\round9_20261026",
+  "preparation_dir": "G:\\fmb666\\work\\round10\\20261026T054000_preparation",
+  "protocol_sha256": "8d553cf9323d69641d4fed9f03b88d7a272e86282a9a08100b17e8a847084a6d",
+  "output_root": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round10",
+  "native_activation_budget": 0,
+  "total_budget_s": 7200,
+  "validator_timeout_s": 1800,
+  "candidate_timeout_s": 600,
+  "regression_timeout_s": 170,
+  "next_scientific_run_gate": "BLOCKED",
+  "official_score": null
+}
