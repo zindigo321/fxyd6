@@ -1,0 +1,8 @@
+"""Pure offline round13 entry; producer/native CLIs are never imported."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.round13.run import cli
+
+if __name__ == '__main__':
+    raise SystemExit(cli())
