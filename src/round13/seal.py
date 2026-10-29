@@ -5,10 +5,11 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import sys
 import time
 import zipfile
-from .archive import safe_name
-from .common import read, write, require, sha, record
+from .archive import safe_name, safe_inventory
+from .common import read, write, require, sha, record, fingerprint
 from .control import Lifecycle
 
 REQUIRED_PASS = ['archive_identity_verification','native_record_metrics_replay','stable_global_replay','component_whole_consistency','incompatible_request_handling','offline_alignment_acceptance']
@@ -38,7 +39,8 @@ def verify_seal(folder):
         require(len(results)==6 and sum('components' in r for r in results.values())==2,'SEAL_CASE_COMPLETENESS')
         for r in results.values():
             require(r['source']=='archive_replay' and r['compatibility']['status']=='COMPATIBLE' and r['new_native_validation_performed'] is False,'SEAL_RESULT_SCOPE')
-    return dict(status=final['status'],exit_code=final['exit_code'],reexecuted=False,verified_files=len(manifest['files']),delivery=str(folder))
+    return dict(status=final['status'],exit_code=final['exit_code'],reexecuted=False,verified_files=len(manifest['files']),delivery=str(folder),
+                consumer_binding_profile=final.get('consumer_binding_profile','round13-historical-v1'))
 
 
 def write_seal(folder, status, exit_code, entry_s, elapsed_s):
@@ -52,6 +54,50 @@ def write_seal(folder, status, exit_code, entry_s, elapsed_s):
         entry_end_to_end_s=entry_s,lifecycle_elapsed_upper_bound_s=elapsed_s,scope='manifest read back after final report/status/logs; no future export included'))
 
 
+def verify_selected_attempts(work, selections, final_manifest, check=lambda: None):
+    """New live seals bind executed attempts; historical verify_seal keeps its old profile."""
+    from .run import ROOT
+    work=Path(work).resolve();root=ROOT.resolve();bound={}
+    require(set(selections)=={'main','check','tests','guards','legacy'},'SEAL_SELECTED_JOB_SET')
+    for row in final_manifest:
+        require(Path(row['path']).resolve().is_relative_to(root) and record(row['path'],check)==row,'SEAL_FINAL_CODE_BYTES')
+    for key,selection in selections.items():
+        check();source=Path(selection['path']).resolve();attempt=source.parent
+        require(source.name=='output' and attempt.parent==work/'attempts','SEAL_ATTEMPT_PATH: '+key)
+        require(selection.get('attempt_id')==attempt.name,'SEAL_ATTEMPT_ID: '+key)
+        command_path=attempt/'command_result.json';result_path=source/'job_result.json'
+        require(selection.get('command_result_sha256')==sha(command_path,check) and selection.get('job_result_sha256')==sha(result_path,check),'SEAL_SELECTED_ATTEMPT_DIGEST: '+key)
+        command=read(command_path);consumer=read(attempt/'consumer_code.json');result=read(result_path)
+        require(command.get('binding_profile')=='round13-selected-attempt-v2','SEAL_ATTEMPT_PROFILE: '+key)
+        require(consumer==command.get('code_manifest')==final_manifest,'SEAL_CONSUMER_VERSION_MISMATCH: '+key)
+        job='replay' if key=='main' else key
+        require(command.get('attempt_id')==attempt.name and command.get('job')==job and Path(command.get('output_directory','')).resolve()==source,'SEAL_COMMAND_ATTEMPT: '+key)
+        argv=command.get('command',[])
+        expected=['-X','utf8','-B','-m','src.round13.worker','--work',str(work),'--out',str(source),'--job',job]
+        if key=='check':expected+=['--main-out',str(Path(selections['main']['path']).resolve())]
+        require(bool(argv) and Path(argv[0]).resolve()==Path(sys.executable).resolve() and argv[1:]==expected,'SEAL_COMMAND_MISMATCH: '+key)
+        require(command.get('python_exit_code')==0 and command.get('timeout') is False and result.get('status')=='PASS' and result.get('exit_code')==0,'SEAL_UNFINISHED_JOB: '+key)
+        require(read(attempt/'supervised_result.json')==result,'SEAL_SUPERVISED_RESULT_MISMATCH: '+key)
+        expected_snapshot={Path(row['path']).resolve().relative_to(root).as_posix():row for row in final_manifest}
+        with zipfile.ZipFile(attempt/'consumer_code.zip') as snapshot:
+            safe_inventory(snapshot.infolist())
+            require(set(snapshot.namelist())==set(expected_snapshot),'SEAL_CONSUMER_SNAPSHOT_SET: '+key)
+            for name,row in expected_snapshot.items():
+                require(snapshot.getinfo(name).file_size==row['bytes'] and hashlib.sha256(snapshot.read(name)).hexdigest()==row['sha256'],'SEAL_CONSUMER_SNAPSHOT_BYTES: '+key)
+        artifacts=command.get('output_manifest',[]);seen=set()
+        require(bool(artifacts),'SEAL_OUTPUT_MANIFEST_MISSING: '+key)
+        for row in artifacts:
+            p=Path(row['path']).resolve();name=str(p).casefold()
+            require(p.is_relative_to(source) and name not in seen,'SEAL_OUTPUT_MANIFEST_PATH: '+key);seen.add(name)
+            require(record(p,check)==row,'SEAL_OUTPUT_BYTES_MISMATCH: '+key)
+        require(seen=={str(p.resolve()).casefold() for p in source.rglob('*') if p.is_file()},'SEAL_OUTPUT_MEMBER_SET: '+key)
+        bound[key]=dict(attempt_id=attempt.name,output_directory=str(source),command=argv,command_result=record(command_path,check),
+                        consumer_code=record(attempt/'consumer_code.json',check),artifacts=artifacts)
+    identity=fingerprint(final_manifest)
+    require(all(r.get('consumer_code_identity')==identity for r in read(Path(selections['main']['path'])/'results.json').values()),'SEAL_MAIN_CONSUMER_IDENTITY')
+    return dict(status='PASS',profile='round13-selected-attempt-v2',consumer_code_identity=identity,selected_attempts=bound)
+
+
 def seal(work, entry_start):
     from .run import ROOT,code_files
     life=Lifecycle(work/'lifecycle.json');life.check()
@@ -60,7 +106,11 @@ def seal(work, entry_start):
         import datetime
         out=work/('delivery_'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S'))
     out.mkdir(exist_ok=False)
-    locations={k:Path(read(work/('latest_'+k+'.json'))['path']) for k in ['main','check','tests','guards','legacy']}
+    selections={k:read(work/('latest_'+k+'.json')) for k in ['main','check','tests','guards','legacy']}
+    final_manifest=[record(p,life.check) for p in code_files()]
+    binding=verify_selected_attempts(work,selections,final_manifest,life.check)
+    write(out/'selected_attempt_binding.json',binding)
+    locations={k:Path(v['path']) for k,v in selections.items()}
     for key,source in locations.items():
         result=read(source/'job_result.json');require(result['status']=='PASS' and result['exit_code']==0,'SEAL_UNFINISHED_JOB: '+key)
         if key=='legacy':
@@ -92,7 +142,9 @@ def seal(work, entry_start):
             tree=ast.parse(p.read_text(encoding='utf-8-sig'))
             require(not any(isinstance(n,(ast.Import,ast.ImportFrom)) and 'round13' in ast.unparse(n) for n in ast.walk(tree)),'OLD_CODE_IMPORTS_ROUND13')
     write(out/'code_preservation.json',dict(status='PASS',unchanged_old_files=149,old_identity=frozen['sha256'],only_new_files=[p.relative_to(ROOT).as_posix() for p in code_files()]))
-    new=[record(p,life.check) for p in code_files()];write(out/'consumer_code_manifest.json',new)
+    new=[record(p,life.check) for p in code_files()]
+    require(new==final_manifest,'SEAL_CONSUMER_CODE_CHANGED_AFTER_BINDING')
+    write(out/'consumer_code_manifest.json',new)
     with zipfile.ZipFile(out/'consumer_code_snapshot.zip','w',zipfile.ZIP_DEFLATED) as z:
         for p in code_files():z.write(p,p.relative_to(ROOT).as_posix())
     (out/'K12_to_K13.diff').write_text(''.join(line for p in code_files() for line in difflib.unified_diff([],p.read_text(encoding='utf8').splitlines(True),fromfile='/dev/null',tofile=p.relative_to(ROOT).as_posix())),encoding='utf8')
@@ -128,6 +180,7 @@ def seal(work, entry_start):
                  accounting='Parent and child wall times overlap and are not summed; all authoring, retries and waits remain in lifecycle budget')
     write(out/'timings.json',timings)
     final=dict(status='PASS',exit_code=0,**{k:'PASS' for k in REQUIRED_PASS},protocol_alignment_status='COMPLETED_WITH_UNRESOLVED_RULES',
+        consumer_binding_profile='round13-selected-attempt-v2',
         active_protocol_change_authorized=False,new_native_validation_performed=False,historical_STK_completeness='UNRESOLVED',official_readiness='UNRESOLVED',official_score=None,
         next_scientific_run_gate='BLOCKED_PENDING_RULE_CONFIRMATION',round13_native_activation_count=0,git_write_operations=0,
         own_round12=dict(status='BLOCKED',exit_code=2,processed_cells=0,cost='NOT_RUN'),

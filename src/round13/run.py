@@ -10,7 +10,7 @@ import sys
 import time
 import uuid
 import zipfile
-from .common import read, write, require, record
+from .common import read, write, require, record, sha
 from .control import Lifecycle, Status, BudgetExceeded, classify
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -39,7 +39,9 @@ def invoke(work,job,extra=None):
             code=proc.returncode
         except subprocess.TimeoutExpired:
             timedout=True;code=2
-    data=dict(command=argv,python_exit_code=code,supervised_wall_s=time.perf_counter()-started,timeout=timedout,lifecycle_elapsed_upper_bound_s=life.elapsed(),phase_remaining_s=life.remaining(),code_manifest=manifest)
+    data=dict(command=argv,python_exit_code=code,supervised_wall_s=time.perf_counter()-started,timeout=timedout,lifecycle_elapsed_upper_bound_s=life.elapsed(),phase_remaining_s=life.remaining(),code_manifest=manifest,
+              binding_profile='round13-selected-attempt-v2',attempt_id=attempt.name,job=job,output_directory=str(out.resolve()),
+              output_manifest=[record(p) for p in sorted(out.rglob('*')) if p.is_file()])
     write(attempt/'command_result.json',data)
     result=read(out/'job_result.json') if (out/'job_result.json').exists() else dict(status='BLOCKED' if timedout else 'FAIL',exit_code=code,error='TIMEOUT' if timedout else 'WORKER_NO_RESULT')
     try:
@@ -63,20 +65,28 @@ def new_work():
     return work
 
 
+def selected_attempt(out):
+    return dict(path=str(out),attempt_id=out.parent.name,command_result_sha256=sha(out.parent/'command_result.json'),
+                job_result_sha256=sha(out/'job_result.json') if (out/'job_result.json').is_file() else None)
+
+
 def main():
     global ACTIVE_WORK
-    entry=time.perf_counter();p=argparse.ArgumentParser()
+    entry=time.perf_counter();p=argparse.ArgumentParser(allow_abbrev=False)
     p.add_argument('--work');p.add_argument('--mode',choices=['all','evaluate-existing','check','tests','legacy','guards','seal','verify-seal'],default='all')
     p.add_argument('--case');p.add_argument('--request');p.add_argument('--main-out');p.add_argument('--seal-dir')
     p.add_argument('--review-revision',action='store_true',help='Rerun after a reviewed code correction, retaining all prior seals and the same lifecycle budget')
+    explicit={arg.split('=',1)[0] for arg in sys.argv[1:] if arg.startswith('--')}
     a=p.parse_args();work=Path(a.work).resolve() if a.work else new_work()
     ACTIVE_WORK=work
     require(work.is_relative_to(ROOT/'work/round13'),'WORK_ROOT_SCOPE')
     if a.mode=='verify-seal':
+        require(not explicit.intersection({'--case','--request','--main-out','--review-revision'}),'VERIFY_SEAL_NEW_EVALUATION_REQUIRES_NEW_RUN')
         from .seal import verify_seal
         result=verify_seal(Path(a.seal_dir));print(json.dumps(result,ensure_ascii=False));return result['exit_code']
     sealed=Path(read(work/'latest_delivery.json')['path']) if (work/'latest_delivery.json').exists() else work/'delivery'
-    if (sealed/'receipt.json').exists() and not a.review_revision:
+    if (sealed/'receipt.json').exists():
+        require(not explicit.intersection({'--mode','--case','--request','--main-out','--seal-dir','--review-revision'}),'SEALED_WORK_NEW_EVALUATION_REQUIRES_NEW_RUN')
         from .seal import verify_seal
         result=verify_seal(sealed);print(json.dumps(result,ensure_ascii=False));return result['exit_code']
     if not (work/'input_binding.json').exists():
@@ -89,12 +99,12 @@ def main():
         out,result=invoke(work,'replay',extra)
         if a.mode=='evaluate-existing' or result['exit_code']:
             return result['exit_code']
-        write(work/'latest_main.json',dict(path=str(out)))
+        write(work/'latest_main.json',selected_attempt(out))
     if a.mode=='all':
         if life.data['phase']=='implementation_replay':life.phase('validation')
         for job,extra in [('check',['--main-out',str(out)]),('tests',[]),('guards',[]),('legacy',[])]:
             jobout,result=invoke(work,job,extra)
-            write(work/('latest_'+job+'.json'),dict(path=str(jobout)))
+            write(work/('latest_'+job+'.json'),selected_attempt(jobout))
             if result['exit_code']:return result['exit_code']
         life=Lifecycle(work/'lifecycle.json')
         if life.data['phase']=='validation':life.phase('seal_export')
@@ -102,7 +112,7 @@ def main():
         return seal(work,entry)
     if a.mode in ['check','tests','legacy','guards']:
         extra=['--main-out',a.main_out] if a.mode=='check' else []
-        out,result=invoke(work,a.mode,extra);write(work/('latest_'+a.mode+'.json'),dict(path=str(out)));return result['exit_code']
+        out,result=invoke(work,a.mode,extra);write(work/('latest_'+a.mode+'.json'),selected_attempt(out));return result['exit_code']
     if a.mode=='seal':
         life.phase('seal_export')
         from .seal import seal

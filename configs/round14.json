@@ -1,0 +1,76 @@
+{
+  "archive": "G:/fmb666/伐谋杯_已完成成果_20261027_133304.zip",
+  "archive_bytes": 416902052,
+  "archive_sha256": "8d60684d7d29263714fc502e7fcd0d3abe501e7ab51a416b76b78a15bce299ea",
+  "archive_root": "FaMou_completed_20261027_133304",
+  "archive_members": 13316,
+  "manifest_sha256": "d64f64d46dd74ec861c22ae50dda2078eff32968c0acf56fed040855619588f1",
+  "prior": "G:/gpt-file/Codex/outputs/bd-fmb/round12/20261026T095042_reference",
+  "old_code_identity": "cf7b589d47851c4b722ceef98fda53337a7aa88871cbc95a512b2c013c791da7",
+  "audit": "G:/gpt-file/Codex/2026-10-26/pass-0-5036-54-185-044/outputs/teammate_comparison",
+  "preferred_output": "G:/gpt-file/Codex/outputs/bd-fmb/round14",
+  "duration_s": 604800.0,
+  "absolute_time_tolerance_s": 1e-06,
+  "coordinate_tolerance_deg": 1e-08,
+  "mask_latitude_limit_deg": 82.94340805970818,
+  "raw_point_count": 43424,
+  "mask_point_count": 43070,
+  "matrix_sha256": "31b7c56ba07e7d75c3fe02cd1ec8d8e52ad38076ea7c5852812e8a7cf75eacac",
+  "matrix_bytes": 754188160,
+  "active_protocol_change_authorized": false,
+  "native_activation_budget": 0,
+  "git_write_budget": 0,
+  "cases": {
+    "team_competition_N28": {
+      "group": "TEAM_COMPETITION_V3",
+      "N": 28,
+      "path": "competition_v1/runs/whole_reviews/N28_c1fbd71e9dfca4e0",
+      "evidence_type": "saved_whole_constellation"
+    },
+    "team_competition_N30": {
+      "group": "TEAM_COMPETITION_V3",
+      "N": 30,
+      "path": "competition_v1/runs/whole_reviews/N30_e2a667f57b5429dd",
+      "evidence_type": "saved_whole_constellation"
+    },
+    "team_stable_N28": {
+      "group": "TEAM_STABLE",
+      "N": 28,
+      "evidence_type": "historical_global_array"
+    },
+    "team_stable_N30": {
+      "group": "TEAM_STABLE",
+      "N": 30,
+      "evidence_type": "historical_global_array"
+    },
+    "team_stable_N60": {
+      "group": "TEAM_STABLE",
+      "N": 60,
+      "evidence_type": "historical_global_array"
+    },
+    "team_stable_N100": {
+      "group": "TEAM_STABLE",
+      "N": 100,
+      "evidence_type": "historical_global_array"
+    }
+  },
+  "prepared_work": "work/round14/20261029T063900_offline",
+  "k13_work": "G:/fmb666/work/round13/20261027T093702_offline",
+  "k13_manifest": "G:/gpt-file/Codex/outputs/bd-fmb/round13/20261027T093702_offline/sealed/artifact_manifest.json",
+  "total_limit_seconds": 7200,
+  "compute_limit_seconds": 6600,
+  "baseline_identity": "c1fbd71e9dfca4e0a7d0d603d496fff8a71e2bc406d12eee113ab2bc4207b71d",
+  "same_height_km": 692.8318965760104,
+  "neighbor_count": 896,
+  "minimum_improvement_s": 1,
+  "improvement_uncertainty_margin_s": 1e-06,
+  "ranking": [
+    "Tmax",
+    "Tavg",
+    "T100",
+    "T90",
+    "identity"
+  ],
+  "mask_official": false,
+  "source": "archived_component_composition"
+}

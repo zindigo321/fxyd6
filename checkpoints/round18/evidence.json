@@ -1,0 +1,166 @@
+{
+  "round": 18,
+  "study": "Conditional TEAM_COMPETITION_V3 archived-component N28 four-anchor repair",
+  "status": "PASS",
+  "optimization_outcome": "FEASIBLE_IMPROVEMENT_FOUND",
+  "declared_new_candidates": 231066,
+  "fully_evaluated": 4,
+  "T100_certificate_rejected": 231013,
+  "T90_certificate_rejected": 49,
+  "qualified_count": 2,
+  "unprocessed": 0,
+  "unknown": 0,
+  "R17_candidates_REUSED": 57834,
+  "five_anchor_union_candidates": 288900,
+  "baseline_identity": "c1fbd71e9dfca4e0a7d0d603d496fff8a71e2bc406d12eee113ab2bc4207b71d",
+  "selected_identity": "fa31ae444cd7afcf008b9d8d4d10a8ce6a8b8533c4d8f68c27bcf0003106d372",
+  "removed_original_indices": [
+    1217,
+    1284
+  ],
+  "added_catalog_indices": [
+    2021,
+    2023
+  ],
+  "baseline_metrics": {
+    "mask": {
+      "points": 43070,
+      "covered": 43070,
+      "uncovered": 0,
+      "coverage_end_fraction": 1.0,
+      "threshold_90_count": 38763,
+      "T90_s": 283728.33914436615,
+      "T100_s": 595089.2108747589,
+      "reached_90": true,
+      "reached_100": true,
+      "status": "AVAILABLE"
+    },
+    "original_domain": {
+      "points": 43424,
+      "covered": 43070,
+      "uncovered": 354,
+      "coverage_end_fraction": 0.9918478260869565,
+      "threshold_90_count": 39082,
+      "T90_s": 290895.44183683814,
+      "T100_s": null,
+      "reached_90": true,
+      "reached_100": false,
+      "status": "AVAILABLE"
+    },
+    "pooled_internal": {
+      "gap_count": 172,
+      "mean_s": 9413.983168107334,
+      "max_s": 172730.31608610202,
+      "longest_endpoints_s": [
+        69292.439694662,
+        242022.755780764
+      ]
+    },
+    "pooled_boundary_inclusive": {
+      "gap_count": 178,
+      "mean_s": 10135.414639655666,
+      "max_s": 172730.31608610202,
+      "longest_endpoints_s": [
+        69292.439694662,
+        242022.755780764
+      ]
+    }
+  },
+  "selected_metrics": {
+    "mask": {
+      "points": 43070,
+      "covered": 43070,
+      "uncovered": 0,
+      "coverage_end_fraction": 1.0,
+      "threshold_90_count": 38763,
+      "T90_s": 283626.3948020579,
+      "T100_s": 595089.2108747589,
+      "reached_90": true,
+      "reached_100": true,
+      "status": "AVAILABLE"
+    },
+    "original_domain": {
+      "points": 43424,
+      "covered": 43070,
+      "uncovered": 354,
+      "coverage_end_fraction": 0.9918478260869565,
+      "threshold_90_count": 39082,
+      "T90_s": 290661.63985764096,
+      "T100_s": null,
+      "reached_90": true,
+      "reached_100": false,
+      "status": "AVAILABLE"
+    },
+    "pooled_internal": {
+      "gap_count": 175,
+      "mean_s": 9251.526570870468,
+      "max_s": 132051.28738869302,
+      "longest_endpoints_s": [
+        242031.721879453,
+        374083.009268146
+      ]
+    },
+    "pooled_boundary_inclusive": {
+      "gap_count": 181,
+      "mean_s": 9966.385916279442,
+      "max_s": 136700.71607742802,
+      "longest_endpoints_s": [
+        468099.283922572,
+        604800.0
+      ]
+    }
+  },
+  "improvement_seconds": {
+    "T90": 101.94434230827028,
+    "T100": 0.0,
+    "Tavg": 162.4565972368655,
+    "Tmax": 40679.028697409
+  },
+  "selected_orbit_csv": {
+    "path": "selected_orbits.csv",
+    "rows": 28,
+    "bytes": 5199,
+    "sha256": "7b9480f8a1aef119b73cd2e1732ce45845b1634886492a8c5857636ad8654365",
+    "original_float_state_roundtrip_verified": true,
+    "git_text_attribute": "selected_orbits.csv -text"
+  },
+  "external_local_evidence": {
+    "delivery_root": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round18\\20261029T124400_offline",
+    "source_archive_bytes": 416902052,
+    "source_archive_sha256": "8d60684d7d29263714fc502e7fcd0d3abe501e7ab51a416b76b78a15bce299ea",
+    "sealed_manifest_sha256": "5a59a9a3404d25f217b1c39840427ed8d2d8609bc1c4236e1c98bc4540efd0ee",
+    "transport_manifest_sha256": "8b3c50043a8a3c1d78940243e79d1d7cc134b2f3cf0183952985a479c6c84de1",
+    "delivery_manifest_sha256": "870f03f4fdf73a74b6514468a5e1c22e9f55772877f3b0b00bb1be20f46432c5",
+    "frozen_source_zip_sha256": "7192b30bd2e9c89e336740f571c02e1dcd84d3ea32cb50ab7c8c904f43ca7071",
+    "raw_source_files": 268,
+    "full_evidence_committed": false,
+    "git_text_normalization_is_not_raw_source_identity": true
+  },
+  "independent_local_validation": {
+    "historical_tests": 418,
+    "new_round18_tests": 46,
+    "binding_counterexamples": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "GitHub_Actions_CI_claim": false
+  },
+  "limitations": {
+    "active_protocol_change_authorized": false,
+    "official_readiness": "UNRESOLVED",
+    "official_score": null,
+    "conditional_mixed_saved_altitude": true,
+    "mask_official": false,
+    "new_native_validation_performed": false,
+    "whole_constellation_STK_verified": false,
+    "known_P2_export_guard": "connect/bind are denied but sendto/getaddrinfo are not; network_denied is not complete network isolation; no actual network request found in audited run"
+  },
+  "historical_K12": {
+    "status": "BLOCKED",
+    "exit_code": 2,
+    "units": 0,
+    "cost": "NOT_RUN"
+  },
+  "native_activations_in_research_and_audit": 0,
+  "git_write_operations_by_research_and_auditor": 0
+}
