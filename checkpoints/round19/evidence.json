@@ -1,0 +1,150 @@
+{
+  "round": 19,
+  "status": "PASS",
+  "exit_code": 0,
+  "study": "Conditional fixed-R18-incumbent full-catalog N28 single swap",
+  "optimization_outcome": "NO_FURTHER_QUALIFIED_IMPROVEMENT_IN_DECLARED_R18_CENTERED_SINGLE_SWAP_NEIGHBORHOOD",
+  "declared_candidates": 60004,
+  "partitions": {
+    "GAP": 52948,
+    "T100": 7053,
+    "T90": 0,
+    "FULL": 3
+  },
+  "all_candidates_independently_verified": true,
+  "unprocessed": 0,
+  "unknown": 0,
+  "candidate_REUSED": 0,
+  "qualified_for_round19": 0,
+  "retained_R18_incumbent": true,
+  "original_constraint_reference_identity": "c1fbd71e9dfca4e0a7d0d603d496fff8a71e2bc406d12eee113ab2bc4207b71d",
+  "search_center_identity": "fa31ae444cd7afcf008b9d8d4d10a8ce6a8b8533c4d8f68c27bcf0003106d372",
+  "improvement_reference_identity": "fa31ae444cd7afcf008b9d8d4d10a8ce6a8b8533c4d8f68c27bcf0003106d372",
+  "selected_identity": "fa31ae444cd7afcf008b9d8d4d10a8ce6a8b8533c4d8f68c27bcf0003106d372",
+  "selected_metrics": {
+    "mask": {
+      "points": 43070,
+      "covered": 43070,
+      "uncovered": 0,
+      "coverage_end_fraction": 1.0,
+      "threshold_90_count": 38763,
+      "T90_s": 283626.3948020579,
+      "T100_s": 595089.2108747589,
+      "reached_90": true,
+      "reached_100": true,
+      "status": "AVAILABLE"
+    },
+    "raw": {
+      "points": 43424,
+      "covered": 43070,
+      "uncovered": 354,
+      "coverage_end_fraction": 0.9918478260869565,
+      "threshold_90_count": 39082,
+      "T90_s": 290661.63985764096,
+      "T100_s": null,
+      "reached_90": true,
+      "reached_100": false,
+      "status": "AVAILABLE"
+    },
+    "pooled_internal": {
+      "gap_count": 175,
+      "mean_s": 9251.526570870468,
+      "max_s": 132051.28738869302,
+      "longest_endpoints_s": [
+        242031.721879453,
+        374083.009268146
+      ]
+    },
+    "pooled_boundary_inclusive": {
+      "gap_count": 181,
+      "mean_s": 9966.385916279442,
+      "max_s": 136700.71607742802,
+      "longest_endpoints_s": [
+        468099.283922572,
+        604800.0
+      ]
+    }
+  },
+  "selected_orbits": {
+    "repository_path": "checkpoints/round18/selected_orbits.csv",
+    "bytes": 5199,
+    "sha256": "7b9480f8a1aef119b73cd2e1732ce45845b1634886492a8c5857636ad8654365",
+    "unchanged_from_R18": true
+  },
+  "first_formal_failure": {
+    "preserved": true,
+    "exit_code": 1,
+    "cause": "Terminal rank numeric fields compared exactly; Tavg differed 1.8189894035458565e-12 seconds",
+    "resolution": "New checker and tests frozen; all four jobs and 60004 candidates fully rerun",
+    "numerical_contract_unchanged": true
+  },
+  "source": {
+    "consumed_files": 292,
+    "unchanged_prior_files": 268,
+    "unchanged_R18_checkpoints": 4,
+    "new_files": 24,
+    "consumer_identity": "b1216b21f70909af967e849a8449db087a185cd02f075d7b227b1bb67390a53d",
+    "consumer_code_zip_sha256": "21c658774d956499d1bf68c8ef655ac1bf09664efe8f729cc3d36390ee573501",
+    "contract_sha256": "1d4bd672bc0086c54b65feb54f6cd0158ea16293d1db84f2c61958339be8297c"
+  },
+  "tests": {
+    "new": 76,
+    "historical": 464,
+    "total": 540,
+    "historical_binding_counterexamples": 26
+  },
+  "independent_review": {
+    "science": "PASS",
+    "engineering": "PASS",
+    "package": "PASS",
+    "science_record_sha256": "6de10e7c76f1eed72c54904a87414b53d33dd0d055199624d5ad85b694a96643",
+    "engineering_record_sha256": "b170f27c82d2f61a66a6c487f61d89fb497031048932527020fcb59bac2ae04b",
+    "package_record_sha256": "92a464b7f187728652bf1ca93ebb92a05968b72c5e0490207a19a8b1acae0033"
+  },
+  "manifests": {
+    "sealed": {
+      "status": "PASS",
+      "members": 1603,
+      "bytes": 332662452,
+      "manifest_sha256": "a100ed04e0182f7844d2566340522609c93a0f529109e1a42d8b7e3ab4a2d515"
+    },
+    "transport": {
+      "status": "PASS",
+      "members": 1631,
+      "bytes": 333252410,
+      "source_work_mapping_rehashed": true,
+      "manifest_sha256": "542cc72b5dc22d8a013082d967829fa6142da6b0ab679bf53545768bdc341bff"
+    },
+    "delivery": {
+      "status": "PASS",
+      "members": 1641,
+      "bytes": 333743262,
+      "manifest_sha256": "08233d0684e56e91440d143b529d3e3956dbd6991c30714d34ac9bdeb6b46014"
+    }
+  },
+  "timing": {
+    "receipt_creation_elapsed_s": 2171.585499965673,
+    "final_readback_completed_elapsed_s": 2310.8411545391136
+  },
+  "original_local_delivery": "G:\\gpt-file\\Codex\\outputs\\bd-fmb\\round19\\20261030T075253_offline",
+  "outer_final_observation": {
+    "path": "G:\\fmb666\\work\\round19\\20261030T075253_offline\\outer_final_observation.json",
+    "sha256": "e388a3308e9bc6b790409aa1d4cef8e5437532b190a971e8f7cad72ef65119a9"
+  },
+  "limitations": {
+    "active_protocol_change_authorized": false,
+    "official_readiness": "UNRESOLVED",
+    "official_score": null,
+    "next_scientific_run_gate": "BLOCKED_PENDING_RULE_CONFIRMATION",
+    "new_native_validation_performed": false,
+    "whole_constellation_STK_verified": false,
+    "source": "archived_component_composition",
+    "mixed_saved_altitudes_conditional": true,
+    "original_domain_uncovered": 354,
+    "EOP_last_year": 2019,
+    "scenario_year": 2027
+  },
+  "experiment_native_activations": 0,
+  "experiment_git_write_operations": 0,
+  "checkpoint_parent_commit": "3669d5357eed0a9f8ea0ffb2b7b59c416441bf65"
+}
